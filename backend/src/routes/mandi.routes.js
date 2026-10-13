@@ -106,8 +106,11 @@ router.get("/locations", async (req, res) => {
 
     const data = await fetchGovernmentAPI(params);
 
-    console.log("Government API status:", response.status);
-    console.log("Government API response:", responseText);
+    console.log("Location search:", {
+      state,
+      district,
+      records: data.records?.length || 0,
+    });
 
     console.log("Location search:", {
       state,
