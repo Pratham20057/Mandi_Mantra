@@ -5,8 +5,6 @@ const router = Router();
 const fetchGovernmentAPI = async (params) => {
   const url = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`;
 
-  console.log("Government API URL:", url);
-
   const response = await fetch(url);
 
   const text = await response.text();
@@ -29,32 +27,10 @@ router.get("/states", async (req, res) => {
       "api-key": process.env.GOV_API_KEY,
       format: "json",
       limit: "1000",
+      offset: "1000",
     });
 
     const data = await fetchGovernmentAPI(params);
-
-    console.log("Government API records:", data.records?.length || 0);
-    console.log("States returned:", [
-      ...new Set(
-        data.records?.map((record) => record.state).filter(Boolean) || [],
-      ),
-    ]);
-
-    if (!response.ok) {
-      return res.status(500).json({
-        message: "Government API request failed",
-        status: response.status,
-      });
-    }
-
-    try {
-      data = JSON.parse(responseText);
-    } catch (error) {
-      return res.status(500).json({
-        message: "Government API did not return JSON",
-        response: responseText.substring(0, 200),
-      });
-    }
 
     if (!data.records) {
       return res.status(500).json({
@@ -68,11 +44,11 @@ router.get("/states", async (req, res) => {
 
     console.log("States found:", states);
 
-    res.json(states);
+    return res.json(states);
   } catch (error) {
     console.log("State API error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "State API error",
       error: error.message,
     });
