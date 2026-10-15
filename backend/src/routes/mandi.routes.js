@@ -28,17 +28,17 @@ router.get("/states", async (req, res) => {
     const params = new URLSearchParams({
       "api-key": process.env.GOV_API_KEY,
       format: "json",
-      limit: "100",
+      limit: "1000",
     });
 
-    const response = await fetch(
-      `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`,
-    );
+    const data = await fetchGovernmentAPI(params);
 
-    const responseText = await response.text();
-
-    console.log("Government API status:", response.status);
-    console.log("Government API response:", responseText);
+    console.log("Government API records:", data.records?.length || 0);
+    console.log("States returned:", [
+      ...new Set(
+        data.records?.map((record) => record.state).filter(Boolean) || [],
+      ),
+    ]);
 
     if (!response.ok) {
       return res.status(500).json({
@@ -46,8 +46,6 @@ router.get("/states", async (req, res) => {
         status: response.status,
       });
     }
-
-    let data;
 
     try {
       data = JSON.parse(responseText);
