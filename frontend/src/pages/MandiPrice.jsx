@@ -11,6 +11,14 @@ function MandiPrice() {
 
   const record = records.length > 0 ? records[0] : null;
 
+  const formatPrice = (price) => {
+    if (price === null || price === undefined || price === "") {
+      return "Not available";
+    }
+
+    return `₹${Number(price).toLocaleString("en-IN")}`;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b">
@@ -48,7 +56,7 @@ function MandiPrice() {
                 <p className="text-sm text-gray-500">Minimum Price</p>
 
                 <p className="text-2xl font-semibold text-gray-800 mt-2">
-                  ₹{record.min_price}
+                  {formatPrice(record.min_price)}
                 </p>
 
                 <p className="text-xs text-gray-400 mt-1">per quintal</p>
@@ -58,7 +66,7 @@ function MandiPrice() {
                 <p className="text-sm text-gray-500">Maximum Price</p>
 
                 <p className="text-2xl font-semibold text-gray-800 mt-2">
-                  ₹{record.max_price}
+                  {formatPrice(record.max_price)}
                 </p>
 
                 <p className="text-xs text-gray-400 mt-1">per quintal</p>
@@ -68,7 +76,7 @@ function MandiPrice() {
                 <p className="text-sm text-gray-500">Modal Price</p>
 
                 <p className="text-2xl font-semibold text-green-700 mt-2">
-                  ₹{record.modal_price}
+                  {formatPrice(record.modal_price)}
                 </p>
 
                 <p className="text-xs text-gray-400 mt-1">most common price</p>
@@ -130,7 +138,7 @@ function MandiPrice() {
                         </div>
 
                         <p className="text-lg font-semibold text-green-700">
-                          ₹{item.modal_price}
+                          {formatPrice(item.modal_price)}
                         </p>
                       </div>
                     </div>
