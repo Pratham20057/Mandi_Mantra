@@ -5,6 +5,8 @@ const router = Router();
 const fetchGovernmentAPI = async (params) => {
   const url = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`;
 
+  console.log("Fetching data from Government API...");
+  
   const response = await fetch(url);
 
   const text = await response.text();
