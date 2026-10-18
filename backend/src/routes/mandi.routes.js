@@ -140,11 +140,7 @@ router.get("/commodities", async (req, res) => {
     params.append("filters[district]", district);
     params.append("filters[market]", market);
 
-    const response = await fetch(
-      `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`,
-    );
-
-    const data = await response.json();
+    const data = await fetchGovernmentAPI(params);
 
     console.log("Commodity search:", {
       state,
@@ -193,11 +189,7 @@ router.get("/district-commodities", async (req, res) => {
     params.append("filters[state]", state);
     params.append("filters[district]", district);
 
-    const response = await fetch(
-      `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`,
-    );
-
-    const data = await response.json();
+    const data = await fetchGovernmentAPI(params);
 
     console.log("District commodity search:", {
       state,
@@ -228,7 +220,11 @@ router.get("/district-commodities", async (req, res) => {
 // Get mandi prices
 router.get("/prices", async (req, res) => {
   try {
-    const { commodity, state, district, market } = req.query;
+    if (!commodity && !state && !district && !market) {
+      return res.status(400).json({
+        message: "Please provide at least one search filter",
+      });
+    }
 
     console.log("Price search:", {
       commodity,
