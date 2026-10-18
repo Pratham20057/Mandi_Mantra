@@ -6,7 +6,7 @@ const fetchGovernmentAPI = async (params) => {
   const url = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`;
 
   console.log("Fetching data from Government API...");
-  
+
   const response = await fetch(url);
 
   const text = await response.text();
@@ -263,11 +263,20 @@ router.get("/prices", async (req, res) => {
       `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`,
     );
 
+    if (!response.ok) {
+      console.error("Government API status:", response.status);
+
+      return res.status(502).json({
+        message: "Government mandi price service is currently unavailable",
+      });
+    }
+
     const data = await response.json();
 
     console.log("Records found:", data.records?.length || 0);
 
-    res.json(data);
+    return res.json(data);
+    
   } catch (error) {
     console.log("Price API error:", error);
 
