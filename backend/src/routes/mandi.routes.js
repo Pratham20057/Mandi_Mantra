@@ -220,6 +220,7 @@ router.get("/district-commodities", async (req, res) => {
 // Get mandi prices
 router.get("/prices", async (req, res) => {
   try {
+    const { commodity, state, district, market } = req.query;
     if (!commodity && !state && !district && !market) {
       return res.status(400).json({
         message: "Please provide at least one search filter",
@@ -272,7 +273,6 @@ router.get("/prices", async (req, res) => {
     console.log("Records found:", data.records?.length || 0);
 
     return res.json(data);
-    
   } catch (error) {
     console.log("Price API error:", error);
 
