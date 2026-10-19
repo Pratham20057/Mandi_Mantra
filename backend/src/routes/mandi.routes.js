@@ -103,12 +103,12 @@ router.get("/locations", async (req, res) => {
           ...new Set(
             data.records.map((record) => record.market).filter(Boolean),
           ),
-        ]
+        ].sort((a, b) => a.localeCompare(b))
       : [
           ...new Set(
             data.records.map((record) => record.district).filter(Boolean),
           ),
-        ];
+        ].sort((a, b) => a.localeCompare(b));
 
     res.json(values);
   } catch (error) {
@@ -157,7 +157,7 @@ router.get("/commodities", async (req, res) => {
       ...new Set(
         data.records.map((record) => record.commodity).filter(Boolean),
       ),
-    ];
+    ].sort((a, b) => a.localeCompare(b));
 
     res.json(commodities);
   } catch (error) {
@@ -205,7 +205,7 @@ router.get("/district-commodities", async (req, res) => {
       ...new Set(
         data.records.map((record) => record.commodity).filter(Boolean),
       ),
-    ];
+    ].sort((a, b) => a.localeCompare(b));
 
     res.json(commodities);
   } catch (error) {
