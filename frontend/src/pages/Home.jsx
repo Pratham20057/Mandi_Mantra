@@ -491,22 +491,26 @@ function Home() {
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* Main Search */}
         <div className="mb-8">
-          <h2 className="text-3xl font-semibold text-gray-800">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-green-700">
+            Agricultural Market Prices
+          </p>
+
+          <h2 className="text-3xl font-bold tracking-tight text-green-950 sm:text-4xl">
             Check Mandi Prices
           </h2>
 
-          <p className="text-gray-500 mt-2">
+          <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
             Find the latest available prices of agricultural commodities from
-            different mandis.
+            different mandis and make informed selling decisions.
           </p>
         </div>
 
         <form
           onSubmit={handleSearch}
-          className="bg-white border rounded-lg p-6 max-w-4xl"
+          className="max-w-4xl rounded-2xl border border-green-100 bg-white p-6 shadow-sm sm:p-8"
         >
-          <h3 className="text-lg font-medium text-gray-800 mb-5">
-            Search Price
+          <h3 className="mb-6 text-xl font-semibold text-slate-900">
+            Search for a commodity
           </h3>
 
           {error && (
@@ -529,7 +533,7 @@ function Home() {
               <select
                 value={state}
                 onChange={(event) => setState(event.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2.5 bg-white outline-none focus:border-green-600"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100"
               >
                 <option value="">Select State</option>
 
@@ -551,7 +555,7 @@ function Home() {
                 value={district}
                 onChange={(event) => setDistrict(event.target.value)}
                 disabled={!state}
-                className="w-full border border-gray-300 rounded-md px-3 py-2.5 bg-white outline-none focus:border-green-600 disabled:bg-gray-100"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
               >
                 <option value="">
                   {state ? "Select District" : "Select State First"}
@@ -575,7 +579,7 @@ function Home() {
                 value={market}
                 onChange={(event) => setMarket(event.target.value)}
                 disabled={!district}
-                className="w-full border border-gray-300 rounded-md px-3 py-2.5 bg-white outline-none focus:border-green-600 disabled:bg-gray-100"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
               >
                 <option value="">
                   {district ? "Select Mandi" : "Select District First"}
@@ -599,7 +603,7 @@ function Home() {
                 value={commodity}
                 onChange={(event) => setCommodity(event.target.value)}
                 disabled={!market}
-                className="w-full border border-gray-300 rounded-md px-3 py-2.5 bg-white outline-none focus:border-green-600 disabled:bg-gray-100"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
               >
                 <option value="">
                   {market ? "Select Commodity" : "Select Mandi First"}
