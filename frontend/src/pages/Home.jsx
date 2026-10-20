@@ -450,22 +450,38 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       {/* Navbar */}
-      <nav className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-green-700">MandiMantra</h1>
+      <nav className="sticky top-0 z-50 border-b border-green-100 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+          <a href="#" className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-800 text-lg font-bold text-white">
+              M
+            </div>
 
-          <div className="flex gap-6 text-sm text-gray-600">
-            <a href="#" className="hover:text-green-700">
+            <div>
+              <h1 className="text-xl font-bold tracking-tight text-green-900">
+                MandiMantra
+              </h1>
+              <p className="text-xs text-slate-500">
+                Smarter mandi price discovery
+              </p>
+            </div>
+          </a>
+
+          <div className="flex items-center gap-5 text-sm font-medium text-slate-600 sm:gap-8">
+            <a href="#" className="transition-colors hover:text-green-800">
               Home
             </a>
 
-            <a href="#compare" className="hover:text-green-700">
+            <a
+              href="#compare"
+              className="transition-colors hover:text-green-800"
+            >
               Compare Prices
             </a>
 
-            <a href="#about" className="hover:text-green-700">
+            <a href="#about" className="transition-colors hover:text-green-800">
               About
             </a>
           </div>
