@@ -671,7 +671,7 @@ function Home() {
                 <select
                   value={compareState}
                   onChange={(event) => setCompareState(event.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 bg-white outline-none focus:border-green-600"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
                 >
                   <option value="">Select State</option>
 
@@ -693,7 +693,7 @@ function Home() {
                   value={compareDistrict}
                   onChange={(event) => setCompareDistrict(event.target.value)}
                   disabled={!compareState}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 bg-white outline-none focus:border-green-600 disabled:bg-gray-100"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
                 >
                   <option value="">
                     {compareState ? "Select District" : "Select State First"}
@@ -717,7 +717,7 @@ function Home() {
                   value={compareCommodity}
                   onChange={(event) => setCompareCommodity(event.target.value)}
                   disabled={!compareDistrict}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2.5 bg-white outline-none focus:border-green-600 disabled:bg-gray-100"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
                 >
                   <option value="">
                     {compareDistrict
@@ -737,7 +737,7 @@ function Home() {
             <button
               type="submit"
               disabled={compareLoading || !compareCommodity}
-              className="mt-6 bg-green-600 text-white px-6 py-2.5 rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="mt-6 rounded-lg bg-green-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-400"
             >
               {compareLoading ? "Comparing..." : "Compare Prices"}
             </button>
