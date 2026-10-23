@@ -1,25 +1,42 @@
 import { Router } from "express";
 
 const router = Router();
+const apiCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000;
 
 const fetchGovernmentAPI = async (params) => {
   const url = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`;
 
+  const cachedData = apiCache.get(url);
+
+  if (cachedData && cachedData.expiresAt > Date.now()) {
+    console.log("Using cached government API data");
+    return cachedData.data;
+  }
+
   console.log("Fetching data from Government API...");
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(15000),
+  });
 
   const text = await response.text();
 
   console.log("Government API status:", response.status);
 
   if (!response.ok) {
-    console.log("Government API error response:", text);
-
+    console.error("Government API error response:", text);
     throw new Error(`Government API returned ${response.status}`);
   }
 
-  return JSON.parse(text);
+  const data = JSON.parse(text);
+
+  apiCache.set(url, {
+    data,
+    expiresAt: Date.now() + CACHE_DURATION,
+  });
+
+  return data;
 };
 
 // Get states
