@@ -273,19 +273,11 @@ router.get("/prices", async (req, res) => {
       params.append("filters[market]", market);
     }
 
-    const response = await fetch(
-      `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?${params.toString()}`,
-    );
+    const data = await fetchGovernmentAPI(params);
 
-    if (!response.ok) {
-      console.error("Government API status:", response.status);
+    console.log("Records found:", data.records?.length || 0);
 
-      return res.status(502).json({
-        message: "Government mandi price service is currently unavailable",
-      });
-    }
-
-    const data = await response.json();
+    return res.json(data);
 
     console.log("Records found:", data.records?.length || 0);
 
