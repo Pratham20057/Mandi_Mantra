@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const LATEST_GHAZIABAD_MARKET = "Latest available in Ghaziabad";
+const GHAZIABAD_DATASET_MARKETS = [
+  "Ghaziabad APMC",
+  "Hapur APMC",
+  "Muradnagar APMC",
+  "Noida APMC",
+];
+
 function Home() {
   const navigate = useNavigate();
 
@@ -47,17 +55,19 @@ function Home() {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch states");
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || "Failed to fetch states");
         }
 
         const data = await response.json();
 
-        setStates(data);
+        // Keep the model's trained state selectable even when it is absent
+        // from the Government API's first page of current records.
+        setStates([...new Set([...data, "Uttar Pradesh"])].sort((a, b) => a.localeCompare(b)));
       } catch (error) {
         console.log("Error fetching states:", error);
-        setError(
-          "Unable to load states. The Government price service may be temporarily unavailable.",
-        );
+        setStates(["Uttar Pradesh"]);
+        setError(error.message || "Unable to load states. The Government price service may be temporarily unavailable.");
       }
     };
 
@@ -93,7 +103,11 @@ function Home() {
 
         const data = await response.json();
 
-        setDistricts(data);
+        const availableDistricts =
+          state.trim().toLowerCase() === "uttar pradesh"
+            ? [...new Set([...data, "Ghaziabad"])]
+            : data;
+        setDistricts(availableDistricts.sort((a, b) => a.localeCompare(b)));
         setDistrict("");
         setMarkets([]);
         setMarket("");
@@ -101,6 +115,9 @@ function Home() {
         setCommodity("");
       } catch (error) {
         console.log("Error fetching districts:", error);
+        setDistricts(
+          state.trim().toLowerCase() === "uttar pradesh" ? ["Ghaziabad"] : [],
+        );
         setError("Unable to load districts.");
       }
     };
@@ -119,6 +136,13 @@ function Home() {
     }
 
     const fetchMarkets = async () => {
+      const isGhaziabadModelLocation =
+        state.trim().toLowerCase() === "uttar pradesh" &&
+        district.trim().toLowerCase() === "ghaziabad";
+      const modelMandis = isGhaziabadModelLocation
+        ? [...GHAZIABAD_DATASET_MARKETS, LATEST_GHAZIABAD_MARKET]
+        : [];
+
       try {
         setError("");
 
@@ -134,13 +158,18 @@ function Home() {
 
         const data = await response.json();
 
-        setMarkets(data);
+        setMarkets([...new Set([...data, ...modelMandis])].sort((a, b) => a.localeCompare(b)));
         setMarket("");
         setCommodities([]);
         setCommodity("");
       } catch (error) {
         console.log("Error fetching markets:", error);
-        setError("Unable to load mandis.");
+        setMarkets(modelMandis);
+        setError(
+          modelMandis.length
+            ? "Using the latest available Ghaziabad mandi; the government price will be checked when you search."
+            : "Unable to load mandis.",
+        );
       }
     };
 
@@ -157,6 +186,13 @@ function Home() {
     }
 
     const fetchCommodities = async () => {
+      const isGhaziabadModelLocation =
+        state.trim().toLowerCase() === "uttar pradesh" &&
+        district.trim().toLowerCase() === "ghaziabad";
+      const modelCrops = isGhaziabadModelLocation
+        ? ["Green Chilli", "Potato", "Rice", "Tomato", "Wheat"]
+        : [];
+
       try {
         setError("");
 
@@ -176,11 +212,19 @@ function Home() {
 
         const data = await response.json();
 
-        setCommodities(data);
+        setCommodities([...new Set([...data, ...modelCrops])].sort((a, b) => a.localeCompare(b)));
+        if (!data.length && !modelCrops.length) {
+          setError(`No commodities with reported prices were found for ${market}. Try another mandi.`);
+        }
         setCommodity("");
       } catch (error) {
         console.log("Error fetching commodities:", error);
-        setError("Unable to load commodities.");
+        setCommodities(modelCrops);
+        setError(
+          modelCrops.length
+            ? "Showing the five trained crops; live price availability will be checked when you search."
+            : "Unable to load commodities.",
+        );
       }
     };
 
@@ -376,15 +420,20 @@ function Home() {
         market,
       });
 
-      const response = await fetch(
-        `http://localhost:8000/api/v1/mandi/prices?${params.toString()}`,
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch prices");
+      let data;
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/v1/mandi/prices?${params.toString()}`,
+        );
+        const responseData = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(responseData.message || "Mandi price API is unavailable.");
+        }
+        data = responseData;
+      } catch (priceError) {
+        console.warn("Mandi price lookup failed; opening the prediction result anyway:", priceError);
+        data = { records: [], apiError: priceError.message || "Mandi price API is unavailable." };
       }
-
-      const data = await response.json();
 
       navigate("/MandiPrice", {
         state: {
